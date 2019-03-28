@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "616896034",
+    "firebase_url": "https://tracknearfriend.firebaseio.com",
+    "project_id": "tracknearfriend",
+    "storage_bucket": "tracknearfriend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616896034:android:8dbeed0e3b9029d6",
+        "android_client_info": {
+          "package_name": "com.example.tracknearfriend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616896034-f25j6563bn67sfdfhngm7aggmtpum2r4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tracknearfriend",
+            "certificate_hash": "e7980fcb87eba5726c24c3d4717bdc1bfafce476"
+          }
+        },
+        {
+          "client_id": "616896034-90h2ekoup887bnh6b31if55jnc41ogrb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMWFTiSp6gIbSEcH0Ojt2kglLKfJemINA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616896034-90h2ekoup887bnh6b31if55jnc41ogrb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

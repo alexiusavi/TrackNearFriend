@@ -30,7 +30,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.example.tracknearfriend.LoginActivity"
             android:label="@string/title_activity_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,10 +39,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapsActivity"
+            android:name="com.example.tracknearfriend.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".SignupActivity"
+            android:name="com.example.tracknearfriend.SignupActivity"
             android:label="@string/signup" />
     </application>
 
