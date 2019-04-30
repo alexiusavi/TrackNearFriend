@@ -56,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (!isLocationEnabled())
             showAlert(1);
 
-        exit = (Button) findViewById(R.id.exit);
+        exit = findViewById(R.id.exit);
 
         exit.setOnClickListener(this);
     }
@@ -66,6 +66,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         marker = mMap.addMarker(mo);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener((GoogleMap.OnMyLocationButtonClickListener) this);
+        mMap.setOnMyLocationClickListener((GoogleMap.OnMyLocationClickListener) this);
+
     }
 
     @Override
