@@ -51,8 +51,24 @@
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
-                android:text="Full Name"/>
-            <EditText android:id="@+id/reg_fullname"
+                android:text="First Name" />
+
+            <EditText
+                android:id="@+id/reg_fname"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Name"
+                android:textColor="#372c24" />
+
+            <EditText
+                android:id="@+id/reg_lname"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
