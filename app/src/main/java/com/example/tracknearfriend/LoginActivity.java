@@ -14,24 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nullable;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,10 +33,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public TextView textViewData;
 
     private ProgressDialog progressDialog;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser cuser = FirebaseAuth.getInstance().getCurrentUser();
-    String userEmail;
-    String cemail = cuser.getEmail();
 
     // [START declare_auth]
     private FirebaseAuth mAuth;

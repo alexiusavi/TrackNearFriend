@@ -94,6 +94,7 @@
                 android:clickable="true"
                 android:padding="5dp"
                 android:text="log in"
+                android:textColor="#ffffff"
                 android:textAllCaps="false" />
 
             <TextView
@@ -117,7 +118,7 @@
                 android:padding="5dp"
                 android:text="Sign up"
                 android:textAllCaps="false"
-                android:textColor="#000" />
+                android:textColor="#ffffff" />
 
            <!-- <TextView
                 android:id="@+id/forgot_password"

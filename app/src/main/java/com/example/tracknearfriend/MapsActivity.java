@@ -68,7 +68,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = "LatLong";
     private static final String KEY_FULLNAME = "fullname";
     private static final String KEY_EMAIL = "email";
+
+    //Text View;
     public TextView textViewData;
+    TextView textViewUserNameEmail;
+
     FirebaseUser fireEmail = FirebaseAuth.getInstance().getCurrentUser();
     MarkerOptions markerOption;
     String firebaseEmail = fireEmail.getEmail();
@@ -86,7 +90,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //navigation
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -99,6 +102,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
+        textViewUserNameEmail = header.findViewById(R.id.text_username_email_view);
+
 
         //maps
 
@@ -107,20 +113,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mapFragment.getMapAsync(this);
 
+
+        //Text View
+
         textViewData = findViewById(R.id.text_username_view);
+        /*textViewUserNameEmail = findViewById(R.id.text_username_email);*/
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         markerOption = new MarkerOptions().position(new LatLng(0, 0)).title("Current Location");
+
+        //Button
+        findViewById(R.id.signout);
 
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
             requestPermissions(PERMISSIONS, PERMISSION_ALL);
         } else requestLocation();
         if (!isLocationEnabled())
             showAlert(1);
-
-        //Button
-        findViewById(R.id.signout);
     }
 
     private void setSupportActionBar(Toolbar toolbar) {
@@ -132,30 +142,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         marker = mMap.addMarker(markerOption); //marker option
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(true);
 
-        DocumentReference docRef = db.collection("location").document(firebaseEmail);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                String firstName = documentSnapshot.getString("firstname");
-                String lastName = documentSnapshot.getString("lastname");
-
-                textViewData.setText("WELCOME " + firstName + " " + lastName);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
             }
-        });
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMapToolbarEnabled(true);
+
+            DocumentReference docRef = db.collection("location").document(firebaseEmail);
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    String firstName = documentSnapshot.getString("firstname");
+                    String lastName = documentSnapshot.getString("lastname");
+                    String userEmail = documentSnapshot.getString("email");
+
+                    textViewData.setText("WELCOME " + firstName + " " + lastName);
+                    textViewUserNameEmail.setText(firstName + " " + lastName + "\n" + userEmail);
+                }
+            });
+        }
 
     }
 
@@ -164,51 +179,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final LatLng myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
         marker.setPosition(myCoordinates);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-        mMap.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myCoordinates));
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
 
-        CollectionReference collRef = db.collection("location");
-        collRef.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        String userEmails = "";
-                        String[] userEmailsSplit;
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+            mMap.setMyLocationEnabled(true);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(myCoordinates));
 
-                            Note note = documentSnapshot.toObject(Note.class);
-                            note.setDocumentId(documentSnapshot.getId());
+            CollectionReference collRef = db.collection("location");
+            collRef.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            String userEmails = "";
+                            String[] userEmailsSplit;
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
 
-                            String documentId = note.getDocumentId();
+                                Note note = documentSnapshot.toObject(Note.class);
+                                note.setDocumentId(documentSnapshot.getId());
 
-                            userEmails += documentId + " ";
+                                String documentId = note.getDocumentId();
 
-                        }
-                        userEmailsSplit = userEmails.split("\\s");
-                        for (String userEmail : userEmailsSplit) {
-                            if (firebaseEmail.equalsIgnoreCase(userEmail)) {
-                                Map<String, Object> user = new HashMap<>();
-                                DocumentReference docRef = db.collection("location").document(firebaseEmail);
-                                user.put("latLong", myCoordinates);
-                                // Set the "isCapital" field of the city 'DC'
-                                docRef
-                                        .update(user);
+                                userEmails += documentId + " ";
+
                             }
-                        }
+                            userEmailsSplit = userEmails.split("\\s");
+                            for (String userEmail : userEmailsSplit) {
+                                if (firebaseEmail.equalsIgnoreCase(userEmail)) {
+                                    Map<String, Object> user = new HashMap<>();
+                                    DocumentReference docRef = db.collection("location").document(firebaseEmail);
+                                    user.put("latLong", myCoordinates);
+                                    // Set the "isCapital" field of the city 'DC'
+                                    docRef
+                                            .update(user);
+                                }
+                            }
 
-                    }
-                });
+                        }
+                    });
 
         /*Map<String, Object> user = new HashMap<>();
         DocumentReference docRef = db.collection("location").document(firebaseEmail);
@@ -216,11 +233,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Set the "isCapital" field of the city 'DC'
         docRef
                 .update(user);*/
+        }
 
     }
-
-
-
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
@@ -238,21 +253,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void requestLocation() {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        String provider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setPowerRequirement(Criteria.POWER_HIGH);
+            String provider = locationManager.getBestProvider(criteria, true);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locationManager.requestLocationUpdates(provider, 10000, 10, this);
         }
-        locationManager.requestLocationUpdates(provider, 10000, 10, this);
 
     }
 
